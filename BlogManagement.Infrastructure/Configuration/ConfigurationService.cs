@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using BlogManagement.Data.Abstract;
 using Microsoft.IdentityModel.Tokens;
+using BlogManagement.Service;
 
 namespace BlogManagement.Infrastructure.Configuration
 {
@@ -22,7 +23,10 @@ namespace BlogManagement.Infrastructure.Configuration
 		}
 		public static void RegisterDI(this IServiceCollection service)
 		{
-			service.AddScoped(typeof(IRepository<>), typeof(IRepository<>));
+			service.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+			service.AddScoped<IDapperHelper, DapperHelper>();
+
+			service.AddScoped<ICategoryService, CategoryService>();
 		}
 	}
 }

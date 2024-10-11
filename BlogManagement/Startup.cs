@@ -27,10 +27,10 @@ namespace BlogManagement
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-			ConfigurationService.RegisterContextDb(services, Configuration);
+			services.RegisterContextDb(Configuration);
 
 			//Register Dependency Injection
-			ConfigurationService.RegisterDI(services);
+			services.RegisterDI();
 
 			services.AddControllers();
 			services.AddSwaggerGen(c =>

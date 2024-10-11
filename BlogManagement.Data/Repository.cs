@@ -10,29 +10,41 @@ using System.Threading.Tasks;
 
 namespace BlogManagement.Data
 {
-	internal class Repository<T> : IRepository<T> where T : class
+	public class Repository<T> : IRepository<T> where T : class
 	{
 		BlogManagementWebAPIContext _blogManagementWebAPIContext;
 		public Repository(BlogManagementWebAPIContext BlogManagementWebAPIContext)
 		{
 			_blogManagementWebAPIContext = BlogManagementWebAPIContext;
 		}
-		public IEnumerable<T> GetAll()
+		public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> expression = null)
 		{
-			return _blogManagementWebAPIContext.Set<T>();
-		}
-		public IEnumerable<T> GetByCondition(Expression<Func<T, bool>> expression)
-		{
-			return _blogManagementWebAPIContext.Set<T>().Where(expression);
-		}
-		public void Insert(T entity)
-		{
-			_blogManagementWebAPIContext.Set<T>().AddAsync(entity);
+			if (expression == null)
+			{
+				return await _blogManagementWebAPIContext.Set<T>().ToListAsync();
+			}
+
+			return await _blogManagementWebAPIContext.Set<T>().Where(expression).ToListAsync();
 		}
 
-		public void Insert(IEnumerable<T> entities)
+		public async Task<T> GetByIdAsync(object id)
 		{
-			_blogManagementWebAPIContext.Set<T>().AddRangeAsync(entities);
+			return await _blogManagementWebAPIContext.Set<T>().FindAsync(id);
+		}
+
+		public async Task<T> GetSingleByConditionAsync(Expression<Func<T, bool>> expression = null)
+		{
+			return await _blogManagementWebAPIContext.Set<T>().FirstOrDefaultAsync();
+		}
+
+		public async Task InsertAsync(T entity)
+		{
+			await _blogManagementWebAPIContext.Set<T>().AddAsync(entity);
+		}
+
+		public async Task InsertAsync(IEnumerable<T> entities)
+		{
+			await _blogManagementWebAPIContext.Set<T>().AddRangeAsync(entities);
 		}
 
 		public void Update(T entity)
@@ -55,9 +67,12 @@ namespace BlogManagement.Data
 				_blogManagementWebAPIContext.Set<T>().RemoveRange(entities);
 			}
 		}
-		public void Commit()
+
+		public IQueryable<T> Table => _blogManagementWebAPIContext.Set<T>();
+
+		public async Task CommitAsync()
 		{
-			_blogManagementWebAPIContext.SaveChanges();
+			await _blogManagementWebAPIContext.SaveChangesAsync();
 		}
 	}
 }

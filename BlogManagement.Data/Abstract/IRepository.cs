@@ -6,17 +6,22 @@ using System.Threading.Tasks;
 
 namespace BlogManagement.Data.Abstract
 {
-	public interface IRepository <T> where T : class
+	public interface IRepository<T> where T : class
 	{
+		IQueryable<T> Table { get; }
+		Task CommitAsync();
+		void Delete(Expression<Func<T, bool>> expression);
+		void Delete(T entity);
 		/// <summary>
 		/// Get data by expression
 		/// </summary>
 		/// <param name="expression"></param>
 		/// <returns></returns>
-		void Insert(T entity);
-		void Insert(IEnumerable<T> entities);
+		Task<List<T>> GetAllAsync(Expression<Func<T, bool>> expression = null);
+		Task<T> GetByIdAsync(object id);
+		Task<T> GetSingleByConditionAsync(Expression<Func<T, bool>> expression = null);
+		Task InsertAsync(T entity);
+		Task InsertAsync(IEnumerable<T> entities);
 		void Update(T entity);
-		void Delete(T entity);
-		void Delete(Expression<Func<T, bool>> expression);
 	}
 }
