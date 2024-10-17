@@ -4,14 +4,16 @@ using BlogManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BlogManagement.Data.Migrations
 {
     [DbContext(typeof(BlogManagementWebAPIContext))]
-    partial class BlogManagementWebAPIContextModelSnapshot : ModelSnapshot
+    [Migration("20241017082435_fix-userid-long")]
+    partial class fixuseridlong
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -154,10 +156,6 @@ namespace BlogManagement.Data.Migrations
 
                     b.Property<string>("AccessToken")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CodeRefreshToken")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");

@@ -32,6 +32,8 @@ namespace BlogManagement
 			//Register Dependency Injection
 			services.RegisterDI();
 
+			services.RegisterTokenBear(Configuration);
+
 			services.AddControllers();
 			services.AddSwaggerGen(c =>
 			{
@@ -53,6 +55,7 @@ namespace BlogManagement
 
 			app.UseRouting();
 
+			app.UseAuthentication();
 			app.UseAuthorization();
 
 			app.UseEndpoints(endpoints =>

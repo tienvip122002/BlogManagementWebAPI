@@ -1,24 +1,26 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System.Threading;
-using BlogManagement.Service;
+using BlogManagement.Service.Abstract;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BlogManagement.WebAPI.Controllers
 {
-
-	[ApiController]
+	[Authorize]
+    [ApiController]
 	[Route("api/[controller]")]
-	public class CategoryController: Controller
+	public class CategoryController: ControllerBase
 	{
-		public IActionResult Index()
+		ICategoryService _categoryService;
+		public CategoryController(ICategoryService categoryService)
 		{
 			_categoryService = categoryService;
 		}
 
-		[Route("")]
-		public async Task<IActionResult> Index()
+		[HttpGet]
+		public async Task<IActionResult> GetAll()
 		{
-			return Ok(await _categoryService.GetCategories());
+			return Ok(await _categoryService.GetCategoryAll());
 		}
 	}
 }

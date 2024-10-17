@@ -10,10 +10,12 @@ using Microsoft.EntityFrameworkCore;
 using BlogManagement.Data.Abstract;
 using Microsoft.IdentityModel.Tokens;
 using BlogManagement.Service;
+using BlogManagement.Service.Abstract;
+using BlogManagement.Authentication.Service;
 
 namespace BlogManagement.Infrastructure.Configuration
 {
-	public static class ConfigurationService
+    public static class ConfigurationService
 	{
 		public static void RegisterContextDb(this IServiceCollection service, IConfiguration configuration)
 		{
@@ -27,6 +29,9 @@ namespace BlogManagement.Infrastructure.Configuration
 			service.AddScoped<IDapperHelper, DapperHelper>();
 
 			service.AddScoped<ICategoryService, CategoryService>();
+			service.AddScoped<IUserService, UserService>();
+			service.AddScoped<ITokenHandler, Authentication.Service.TokenHandler>();
+			service.AddScoped<IUserTokenService, UserTokenService>();
 		}
 	}
 }
