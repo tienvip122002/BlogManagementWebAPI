@@ -10,8 +10,7 @@ namespace BlogManagement.WebAPI.Controllers
 	[Route("api/[controller]")]
 	public class CategoryController: Controller
 	{
-		ICategoryService _categoryService;
-		public CategoryController(ICategoryService categoryService)
+		public IActionResult Index()
 		{
 			_categoryService = categoryService;
 		}
