@@ -1,3 +1,4 @@
+using Alachisoft.NCache.Caching.Distributed;
 using BlogManagement.Infrastructure.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -27,6 +28,14 @@ namespace BlogManagement
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+
+			services.AddNCacheDistributedCache(configuration =>
+			{
+				configuration.CacheName = "BlogManagementCache";
+				configuration.EnableLogs = true;
+				configuration.ExceptionsEnabled = true;
+			});
+
 			services.RegisterContextDb(Configuration);
 
 			//Register Dependency Injection

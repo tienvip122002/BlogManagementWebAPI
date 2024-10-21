@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BlogManagement.Authentication.Service\BlogManagement.Authentication.Service.csproj" />
+    <ProjectReference Include="..\BlogManagement.core\BlogManagement.core.csproj" />
     <ProjectReference Include="..\BlogManagement.Data\BlogManagement.Data.csproj" />
     <ProjectReference Include="..\BlogManagement.Service\BlogManagement.Service.csproj" />
   </ItemGroup>

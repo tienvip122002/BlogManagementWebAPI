@@ -12,6 +12,8 @@ using Microsoft.IdentityModel.Tokens;
 using BlogManagement.Service;
 using BlogManagement.Service.Abstract;
 using BlogManagement.Authentication.Service;
+using BlogManagement.core.Abstract;
+using BlogManagement.core.Cache;
 
 namespace BlogManagement.Infrastructure.Configuration
 {
@@ -28,6 +30,8 @@ namespace BlogManagement.Infrastructure.Configuration
 			service.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 			service.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
 			service.AddScoped(typeof(IDapperHelper<>), typeof(DapperHelper<>));
+
+			service.AddSingleton<IDistributedCacheService, DistributedCacheService>();
 
 			service.AddScoped<ICategoryService, CategoryService>();
 			service.AddScoped<IUserService, UserService>();

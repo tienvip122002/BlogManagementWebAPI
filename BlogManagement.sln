@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlogManagement.Data", "Blog
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlogManagement.Infrastructure", "BlogManagement.Infrastructure\BlogManagement.Infrastructure.csproj", "{7F7F16D1-62E9-49AD-89DA-3A142B608304}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogManagement.Authentication.Service", "BlogManagement.Authentication.Service\BlogManagement.Authentication.Service.csproj", "{9DAF3A71-ABC1-441C-9E57-532BDE83F8CC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlogManagement.Authentication.Service", "BlogManagement.Authentication.Service\BlogManagement.Authentication.Service.csproj", "{9DAF3A71-ABC1-441C-9E57-532BDE83F8CC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogManagement.core", "BlogManagement.core\BlogManagement.core.csproj", "{57B294BB-A3C8-4390-A3E3-6223B40C3691}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{9DAF3A71-ABC1-441C-9E57-532BDE83F8CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9DAF3A71-ABC1-441C-9E57-532BDE83F8CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9DAF3A71-ABC1-441C-9E57-532BDE83F8CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57B294BB-A3C8-4390-A3E3-6223B40C3691}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57B294BB-A3C8-4390-A3E3-6223B40C3691}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57B294BB-A3C8-4390-A3E3-6223B40C3691}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57B294BB-A3C8-4390-A3E3-6223B40C3691}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
