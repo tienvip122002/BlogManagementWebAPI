@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BlogManagement.Data.Abstract
 {
-	public interface IDapperHelper
+	public interface IDapperHelper<T> where T : class
 	{
 		/// <summary>
 		/// Execute raw query not return any values

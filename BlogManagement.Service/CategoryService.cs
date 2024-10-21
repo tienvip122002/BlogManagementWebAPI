@@ -11,16 +11,14 @@ namespace BlogManagement.Service
 {
     public class CategoryService : ICategoryService
 	{
-		IRepository<Category> _categoryRepository;
-		IDapperHelper _categoryDapperHelper;
-		public CategoryService(IRepository<Category> categoryRepository, IDapperHelper categoryDapperHelper)
+		IUnitOfWork _unitOfWork;
+		public CategoryService(IUnitOfWork unitOfWork)
 		{
-			_categoryRepository = categoryRepository;
-			_categoryDapperHelper = categoryDapperHelper;
+			_unitOfWork = unitOfWork;
 		}
 		public async Task<List<Category>> GetCategoryAll()
 		{
-			return await _categoryRepository.GetAllAsync();
+			return await _unitOfWork.RepositoryCategory.GetAllAsync();
 		}
 	}
 }

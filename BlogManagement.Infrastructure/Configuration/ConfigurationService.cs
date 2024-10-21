@@ -26,7 +26,8 @@ namespace BlogManagement.Infrastructure.Configuration
 		public static void RegisterDI(this IServiceCollection service)
 		{
 			service.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-			service.AddScoped<IDapperHelper, DapperHelper>();
+			service.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
+			service.AddScoped(typeof(IDapperHelper<>), typeof(DapperHelper<>));
 
 			service.AddScoped<ICategoryService, CategoryService>();
 			service.AddScoped<IUserService, UserService>();

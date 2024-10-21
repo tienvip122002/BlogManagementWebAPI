@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace BlogManagement.Data
 {
-	public class DapperHelper : IDapperHelper
+	public class DapperHelper<T> : IDapperHelper<T> where T : class
 	{
 		private readonly string connectString = String.Empty;
 		private IDbConnection _dbConnection;

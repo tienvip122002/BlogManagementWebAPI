@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace BlogManagement.WebAPI.Controllers
 {
 	[Authorize]
-    [ApiController]
+	[ApiController]
 	[Route("api/[controller]")]
 	public class CategoryController: ControllerBase
 	{
