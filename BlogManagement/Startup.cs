@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using NLog.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,14 @@ namespace BlogManagement
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-
+			//nlog
+			services.AddLogging(logging =>
+			{
+				logging.AddNLog();
+				logging.ClearProviders();
+				logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Warning);
+			});
+			//cache
 			services.AddNCacheDistributedCache(configuration =>
 			{
 				configuration.CacheName = "BlogManagementCache";

@@ -19,6 +19,7 @@ namespace BlogManagement.Data
 		public DbSet<Article> Article { get; set; }
 		public DbSet<User> User { get; set; }
 		public DbSet<UserToken> UserToken { get; set; }
+		public DbSet<DBLog> DBLog { get; set; }
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
