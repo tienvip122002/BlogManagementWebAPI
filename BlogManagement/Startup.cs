@@ -1,7 +1,11 @@
 using Alachisoft.NCache.Caching.Distributed;
 using BlogManagement.Infrastructure.Configuration;
+using BlogManagement.WebAPI.Configuration;
+using BlogManagement.WebAPI.Middleware;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -36,6 +40,10 @@ namespace BlogManagement
 				logging.ClearProviders();
 				logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Warning);
 			});
+
+			//automapper
+			services.AddAutoMapper(typeof(AutoMapperConfig).Assembly);
+
 			//cache
 			services.AddNCacheDistributedCache(configuration =>
 			{
@@ -55,6 +63,29 @@ namespace BlogManagement
 			services.AddSwaggerGen(c =>
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "BlogManagement", Version = "v1" });
+				c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+				{
+					Type = SecuritySchemeType.Http,
+					In = ParameterLocation.Header,
+					BearerFormat = "JWT",
+					Scheme = "Bearer",
+					Description = "Please input your token"
+				});
+
+				c.AddSecurityRequirement(new OpenApiSecurityRequirement
+				{
+					{
+						new OpenApiSecurityScheme
+						{
+							Reference = new OpenApiReference
+							{
+								Type = ReferenceType.SecurityScheme,
+								Id = "Bearer"
+							}
+						},
+						new string[] { }
+					}
+				});
 			});
 		}
 
@@ -69,6 +100,22 @@ namespace BlogManagement
 			}
 
 			app.UseHttpsRedirection();
+
+			////Handle Global Error
+			//app.UseExceptionHandler(error =>
+			//{
+			//	error.Run(async httpContext =>
+			//	{
+			//		var msg = httpContext.Features.Get<IExceptionHandlerFeature>();
+
+			//		int statusCode = httpContext.Response.StatusCode;
+
+			//		await httpContext.Response.WriteAsync($"{statusCode} - {msg.Error.Message}");
+
+			//	});
+			//});
+
+			app.UseMiddleware<ExceptionMiddleware>();
 
 			app.UseRouting();
 

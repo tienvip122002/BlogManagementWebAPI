@@ -7,13 +7,13 @@ using NLog;
 
 namespace BlogManagement.WebAPI.Controllers
 {
-	//[Authorize]
+	[Authorize]
 	[ApiController]
 	[Route("api/[controller]")]
 	public class CategoryController: ControllerBase
 	{
 		ICategoryService _categoryService;
-		private readonly ILogger _loggerDb = LogManager.GetLogger("logDatabaseTarget");
+		//private readonly ILogger _loggerDb = LogManager.GetLogger("logDatabaseTarget");
 		public CategoryController(ICategoryService categoryService)
 		{
 			_categoryService = categoryService;
@@ -22,8 +22,9 @@ namespace BlogManagement.WebAPI.Controllers
 		[HttpGet]
 		public async Task<IActionResult> GetCategoryAll()
 		{
-			_loggerDb.Error("log err db");
-			_loggerDb.Info("log err db");
+			//_loggerDb.Error("log err db");
+			//_loggerDb.Info("log err db");
+			//throw new System.ArgumentNullException();
 			return Ok(await _categoryService.GetCategoryAll());
 		}
 	}
