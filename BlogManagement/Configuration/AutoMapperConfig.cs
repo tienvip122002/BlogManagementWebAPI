@@ -8,9 +8,9 @@ namespace BlogManagement.WebAPI.Configuration
 	{
         public AutoMapperConfig()
         {
-			CreateMap<UserModel, User>()
-					  .ForMember(dest => dest.DisplayName, y => y.MapFrom(src => src.Fullname))
-					  .ReverseMap();
+			CreateMap<UserModel, ApplicationUser>()
+					.ForMember(dest => dest.PasswordHash, y => y.MapFrom(src => src.Password))
+					.ReverseMap();
 		}
     }
 }

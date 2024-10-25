@@ -2,7 +2,7 @@
 
 namespace BlogManagement.WebAPI.ViewModel
 {
-	public class UserModel
+	public class UserModel: AccountModel
 	{
 		public string Fullname { get; set; }
 		[Required]

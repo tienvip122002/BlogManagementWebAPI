@@ -27,17 +27,23 @@ namespace BlogManagement.Infrastructure.Configuration
 							.UseSqlServer(configuration.GetConnectionString("BlogManagement"),
 							 options => options.MigrationsAssembly(typeof(BlogManagementWebAPIContext).Assembly.FullName)));
 
-			service.AddIdentity<ApplicationUser, IdentityRole>(option =>
-			{
-				option.SignIn.RequireConfirmedEmail = true;
-			})
+			service.AddIdentity<ApplicationUser, IdentityRole>()
 				.AddEntityFrameworkStores<BlogManagementWebAPIContext>()
 				.AddDefaultTokenProviders();
 
-			service.Configure<DataProtectionTokenProviderOptions>(options =>
+			service.Configure<IdentityOptions>(config =>
 			{
-				options.TokenLifespan = TimeSpan.FromHours(10);
+				config.Password.RequireNonAlphanumeric = false;
+				config.Password.RequireDigit = true;
+				config.Password.RequiredLength = 2;
+				config.Password.RequireLowercase = true;
+				config.Password.RequireUppercase = true;
 			});
+
+			//service.Configure<DataProtectionTokenProviderOptions>(options =>
+			//{
+			//	options.TokenLifespan = TimeSpan.FromHours(10);
+			//});
 		}
 		public static void RegisterDI(this IServiceCollection service)
 		{
@@ -51,6 +57,8 @@ namespace BlogManagement.Infrastructure.Configuration
 			service.AddScoped<IUserService, UserService>();
 			service.AddScoped<ITokenHandler, Authentication.Service.TokenHandler>();
 			service.AddScoped<IUserTokenService, UserTokenService>();
+			service.AddScoped<PasswordHasher<ApplicationUser>>();
+			service.AddScoped<PasswordValidator<ApplicationUser>>();
 		}
 	}
 }
