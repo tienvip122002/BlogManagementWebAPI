@@ -49,6 +49,7 @@ namespace BlogManagement.WebAPI.Controllers
 
 			if (result.Succeeded)
 			{
+				await _userManager.AddToRoleAsync(user, "User");
 				return Ok(true);
 			}
 			else
