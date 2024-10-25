@@ -2,6 +2,7 @@ using Alachisoft.NCache.Caching.Distributed;
 using BlogManagement.Infrastructure.Configuration;
 using BlogManagement.WebAPI.Configuration;
 using BlogManagement.WebAPI.Middleware;
+using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
@@ -87,6 +88,8 @@ namespace BlogManagement
 					}
 				});
 			});
+			//fluentvalidation
+			services.AddValidatorsFromAssemblyContaining<Startup>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

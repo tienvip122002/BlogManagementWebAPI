@@ -14,6 +14,8 @@ using BlogManagement.Service.Abstract;
 using BlogManagement.Authentication.Service;
 using BlogManagement.core.Abstract;
 using BlogManagement.core.Cache;
+using Microsoft.AspNetCore.Identity;
+using BlogManagement.Domain.Entities;
 
 namespace BlogManagement.Infrastructure.Configuration
 {
@@ -24,6 +26,18 @@ namespace BlogManagement.Infrastructure.Configuration
 			service.AddDbContext<BlogManagementWebAPIContext>(options => options
 							.UseSqlServer(configuration.GetConnectionString("BlogManagement"),
 							 options => options.MigrationsAssembly(typeof(BlogManagementWebAPIContext).Assembly.FullName)));
+
+			service.AddIdentity<ApplicationUser, IdentityRole>(option =>
+			{
+				option.SignIn.RequireConfirmedEmail = true;
+			})
+				.AddEntityFrameworkStores<BlogManagementWebAPIContext>()
+				.AddDefaultTokenProviders();
+
+			service.Configure<DataProtectionTokenProviderOptions>(options =>
+			{
+				options.TokenLifespan = TimeSpan.FromHours(10);
+			});
 		}
 		public static void RegisterDI(this IServiceCollection service)
 		{
