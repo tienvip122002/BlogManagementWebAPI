@@ -16,6 +16,9 @@ using BlogManagement.core.Abstract;
 using BlogManagement.core.Cache;
 using Microsoft.AspNetCore.Identity;
 using BlogManagement.Domain.Entities;
+using BlogManagement.core.Configuration;
+using BlogManagement.core.EmailHelper;
+using BlogManagement.Infrastructure.CommonService;
 
 namespace BlogManagement.Infrastructure.Configuration
 {
@@ -45,14 +48,19 @@ namespace BlogManagement.Infrastructure.Configuration
 			//	options.TokenLifespan = TimeSpan.FromHours(10);
 			//});
 		}
-		public static void RegisterDI(this IServiceCollection service)
+		public static void RegisterDI(this IServiceCollection service, IConfiguration configuration)
 		{
+			service.Configure<EmailConfig>(configuration.GetSection("MailSettings"));
+
+
 			service.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 			service.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
 			service.AddScoped(typeof(IDapperHelper<>), typeof(DapperHelper<>));
 
 			service.AddSingleton<IDistributedCacheService, DistributedCacheService>();
 
+			service.AddScoped<IEmailHelper, EmailHelper>(); 
+			service.AddScoped<IEmailTemplateReader, EmailTemplateReader>();
 			service.AddScoped<ICategoryService, CategoryService>();
 			service.AddScoped<IUserService, UserService>();
 			service.AddScoped<ITokenHandler, Authentication.Service.TokenHandler>();

@@ -20,16 +20,30 @@ namespace BlogManagement.Authentication.Service
 		IConfiguration _configuration;
 		IUserService _userService;
 		IUserTokenService _userTokenService;
-		public TokenHandler(IConfiguration configuration, IUserService userService, IUserTokenService userTokenService)
+		UserManager<ApplicationUser> _userManager;
+
+		private const string TokenBearIssuer = "TokenBear:Issuer";
+		private const string TokenBearAudience = "TokenBear:Audience";
+		private const string TokenBearSignatureKey = "TokenBear:SignatureKey";
+		private const string TokenBearExpiredTimeByMinutes = "TokenBear:AccessTokenExpiredByMinutes";
+		private const string AccessTokenProvider = "AccessTokenProvider";
+		private const string RefreshTokenProvider = "RefreshTokenProvider";
+		private const string AccessToken = "AccessToken";
+		private const string RefreshToken = "RefreshToke";
+
+		public TokenHandler(IConfiguration configuration, IUserService userService, IUserTokenService userTokenService, UserManager<ApplicationUser> userManager)
 		{
 			_configuration = configuration;
 			_userService = userService;
 			_userTokenService = userTokenService;
+			_userManager = userManager;
 		}
-		public async Task<(string, DateTime)> CreateAccessToken(User user)
+		public async Task<(string, DateTime)> CreateAccessToken(ApplicationUser user)
 		{
 			int tokenExpirationMinutes = int.Parse(_configuration["TokenBear:AccessTokenExpiredByMinutes"]);
 			DateTime expiresAt = DateTime.Now.AddMinutes(tokenExpirationMinutes);
+
+			var roles = await _userManager.GetRolesAsync(user);
 
 			var claims = new Claim[]
 			{
@@ -38,10 +52,12 @@ namespace BlogManagement.Authentication.Service
 				new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToString(), ClaimValueTypes.DateTime, _configuration["TokenBear:Issuer"]),
 				new Claim(JwtRegisteredClaimNames.Aud, "BlogManagementWebAPI", ClaimValueTypes.String, _configuration["TokenBear:Issuer"]),
 				new Claim(JwtRegisteredClaimNames.Exp, expiresAt.ToString("yyyy/MM/dd hh:mm:ss"), ClaimValueTypes.String, _configuration["TokenBear:Issuer"]),
-				//new Claim(ClaimTypes.NameIdentifier, user.Id.ToString(), ClaimValueTypes.String, ""),
-				new Claim(ClaimTypes.Name, user.DisplayName, ClaimValueTypes.String, _configuration["TokenBear:Issuer"]),
+				new Claim(ClaimTypes.Name, user.Fullname ?? "Unknown", ClaimValueTypes.String, _configuration["TokenBear:Issuer"]),
 				new Claim("Username", user.UserName, ClaimValueTypes.String, _configuration["TokenBear:Issuer"])
-			};
+			}
+			.Union(roles.Select(x => new Claim(ClaimTypes.Role, x)));
+
+			//claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
 			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["TokenBear:SignatureKey"]));
 
@@ -58,10 +74,12 @@ namespace BlogManagement.Authentication.Service
 
 			string accessToken = new JwtSecurityTokenHandler().WriteToken(tokenInfo);
 
+			await _userManager.SetAuthenticationTokenAsync(user, "AccessTokenProvider", "AccessToken", accessToken);
+
 			return await Task.FromResult((accessToken, expiresAt));
 		}
 
-		public async Task<(string, string, DateTime)> CreateRefreshToken(User user)
+		public async Task<(string, string, DateTime)> CreateRefreshToken(ApplicationUser user)
 		{
 			int refreshTokenExpirationHours = int.Parse(_configuration["TokenBear:RefreshTokenExpiredByHours"]);
 			DateTime expiresAt = DateTime.Now.AddHours(refreshTokenExpirationHours);
@@ -73,6 +91,7 @@ namespace BlogManagement.Authentication.Service
 				new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToString(), ClaimValueTypes.DateTime, _configuration["TokenBear:Issuer"]),
 				new Claim(JwtRegisteredClaimNames.Exp, expiresAt.ToString("yyyy/MM/dd hh:mm:ss"), ClaimValueTypes.String, _configuration["TokenBear:Issuer"]),
 				new Claim(ClaimTypes.SerialNumber, refreshTokenCode, ClaimValueTypes.String, _configuration["TokenBear:Issuer"]),
+				new Claim("Username", user.UserName, ClaimValueTypes.String, _configuration["TokenBear:Issuer"])
 			};
 
 			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["TokenBear:SignatureKey"]));
@@ -89,6 +108,9 @@ namespace BlogManagement.Authentication.Service
 			);
 
 			string refreshToken = new JwtSecurityTokenHandler().WriteToken(tokenInfo);
+
+			await _userManager.SetAuthenticationTokenAsync(user, "RefreshTokenProvider", "RefreshToken", refreshToken);
+
 
 			return await Task.FromResult((refreshTokenCode, refreshToken, expiresAt));
 		}
@@ -145,26 +167,25 @@ namespace BlogManagement.Authentication.Service
 				);
 			if(cliamPriciple == null) return new();
 
-			string serialNumber = cliamPriciple.Claims.FirstOrDefault(x => x.Type == ClaimTypes.SerialNumber)?.Value;
+			string username = cliamPriciple.Claims.FirstOrDefault(x => x.Type == "Username")?.Value;
 
-			if (string.IsNullOrEmpty(refreshToken)) return new();
+			var user = await _userManager.FindByNameAsync(username);
 
-			UserToken userToken = await _userTokenService.CheckRefreshToken(refreshToken);
+			var token = await _userManager.GetAuthenticationTokenAsync(user, "AccessTokenProvider", "AccessToken");
 
-			if (userToken != null)
+			if (!string.IsNullOrEmpty(token))
 			{
-				User user = await _userService.FindById(userToken.Id);
-
 				(string newAccessToken, DateTime createdDate) = await CreateAccessToken(user);
 				(string codeRefreshToken, string newRefreshToken, DateTime newCreatedDate) = await CreateRefreshToken(user);
 				return new JwtModel
 				{
 					AccessToken = newAccessToken,
 					RefreshToken = newRefreshToken,
-					FullName = user.DisplayName,
+					FullName = user.Fullname,
 					UserName = user.UserName
 				};
 			}
+
 			return new();
 		}
 	}

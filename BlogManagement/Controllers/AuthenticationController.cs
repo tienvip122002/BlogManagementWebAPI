@@ -28,15 +28,15 @@ namespace BlogManagement.WebAPI.Controllers
 		[AllowAnonymous]
 		public async Task<IActionResult> Login([FromServices] IValidator<AccountModel> validator, [FromBody] AccountModel accountModel)
 		{
-			var validations = await validator.ValidateAsync(accountModel);
-			if (!validations.IsValid)
-			{
-				return BadRequest(validations.Errors.Select(x => new ErrorValdations
-				{
-					FieldName = x.PropertyName,
-					ErrorMessage = x.ErrorMessage
-				}));
-			}
+			//var validations = await validator.ValidateAsync(accountModel);
+			//if (!validations.IsValid)
+			//{
+			//	return BadRequest(validations.Errors.Select(x => new ErrorValdations
+			//	{
+			//		FieldName = x.PropertyName,
+			//		ErrorMessage = x.ErrorMessage
+			//	}));
+			//}
 
 			var user = await _userService.CheckLogin(accountModel.Username, accountModel.Password);
 
@@ -48,24 +48,14 @@ namespace BlogManagement.WebAPI.Controllers
 			(string accessToken, DateTime expiresAtas) = await _tokenHandler.CreateAccessToken(user);
 			(string code, string refreshToken, DateTime expiresAtre) = await _tokenHandler.CreateRefreshToken(user);
 
-			await _userTokenService.SaveToken(new Domain.Entities.UserToken
-			{
-				AccessToken = accessToken,
-				RefreshToken = refreshToken,
-				CodeRefreshToken = code,
-				ExpiredDateAccessToken = expiresAtas,
-				ExpiredDateRefreshToken = expiresAtre,
-				CreatedDate = DateTime.Now,
-				UserId = user.Id,
-				IsActive = true
-			});
 
 			return Ok(new JwtModel
 			{
 				AccessToken = accessToken,
 				RefreshToken = refreshToken,
-				FullName = user.DisplayName,
-				UserName = user.UserName
+				FullName = user.Fullname,
+				UserName = user.UserName,
+				AccessTokenExpireDate = expiresAtas.ToString("yyyy/MM/dd hh:mm:ss"),
 			});
 		}
 

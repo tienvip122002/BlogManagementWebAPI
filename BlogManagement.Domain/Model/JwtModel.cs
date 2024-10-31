@@ -8,5 +8,6 @@ namespace BlogManagement.WebAPI.ViewModel
 		public string RefreshToken {  get; set; }
 		public string UserName {  get; set; }
 		public string FullName {  get; set; }
+		public string AccessTokenExpireDate { get; set; }
 	}
 }

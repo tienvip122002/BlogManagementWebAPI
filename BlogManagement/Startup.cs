@@ -42,6 +42,16 @@ namespace BlogManagement
 				logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Warning);
 			});
 
+			//global authen
+			//services.AddAuthorization(options =>
+			//{
+
+			//    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+			//                                    .RequireAuthenticatedUser()
+			//                                    .Build();
+
+			//});
+
 			//automapper
 			services.AddAutoMapper(typeof(AutoMapperConfig).Assembly);
 
@@ -56,7 +66,8 @@ namespace BlogManagement
 			services.RegisterContextDb(Configuration);
 
 			//Register Dependency Injection
-			services.RegisterDI();
+			services.RegisterDI(Configuration);
+
 
 			services.RegisterTokenBear(Configuration);
 
