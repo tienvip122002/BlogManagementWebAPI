@@ -18,11 +18,11 @@ namespace BlogManagement.Service
 			_userTokenRepository = userTokenRepository;
 		}
 
-		public async Task SaveToken(UserToken userToken)
-		{
-			await _userTokenRepository.InsertAsync(userToken);
-			await _userTokenRepository.CommitAsync();
-		}
+		//public async Task SaveToken(UserToken userToken)
+		//{
+		//	await _userTokenRepository.InsertAsync(userToken);
+		//	await _userTokenRepository.SaveChanges();
+		//}
 		public async Task<UserToken> CheckRefreshToken(string code)
 		{
 			return await _userTokenRepository.GetSingleByConditionAsync(x => x.CodeRefreshToken == code);

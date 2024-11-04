@@ -19,6 +19,7 @@ using BlogManagement.Domain.Entities;
 using BlogManagement.core.Configuration;
 using BlogManagement.core.EmailHelper;
 using BlogManagement.Infrastructure.CommonService;
+using Microsoft.AspNetCore.Http;
 
 namespace BlogManagement.Infrastructure.Configuration
 {
@@ -67,6 +68,8 @@ namespace BlogManagement.Infrastructure.Configuration
 			service.AddScoped<IUserTokenService, UserTokenService>();
 			service.AddScoped<PasswordHasher<ApplicationUser>>();
 			service.AddScoped<PasswordValidator<ApplicationUser>>();
+
+			service.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 		}
 	}
 }

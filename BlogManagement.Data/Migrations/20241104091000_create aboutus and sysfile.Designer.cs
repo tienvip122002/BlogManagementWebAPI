@@ -4,58 +4,22 @@ using BlogManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BlogManagement.Data.Migrations
 {
     [DbContext(typeof(BlogManagementWebAPIContext))]
-    partial class BlogManagementWebAPIContextModelSnapshot : ModelSnapshot
+    [Migration("20241104091000_create aboutus and sysfile")]
+    partial class createaboutusandsysfile
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.17")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("BlogManagement.Domain.Entities.AboutUs", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool?>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<long>("SysFileId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SysFileId");
-
-                    b.ToTable("AboutUs");
-                });
 
             modelBuilder.Entity("BlogManagement.Domain.Entities.ApplicationUser", b =>
                 {
@@ -132,17 +96,17 @@ namespace BlogManagement.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "89bb5390-5343-43f3-a713-c99b89025ac5",
+                            Id = "3b784613-8a09-46ba-9943-756284b3e703",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d09592b7-c167-490f-8930-a79e297723ce",
+                            ConcurrencyStamp = "2ca2a671-0150-4f8b-8087-3bcbd7567ddc",
                             Email = "admin@ymail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@YMAIL.COM",
                             NormalizedUserName = "ADMINISTRATOR",
-                            PasswordHash = "AQAAAAEAACcQAAAAECqZAwUWf9n8ljvMK5xms49p6cf23w2aQX8mTsiTu0fE+IaWI83hQbd1X8qUzuGYJw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEN6na8Xuc7m4x/Of/QoBCyuKUlOBkF5o1LQ9rv7gDw7KxFSi2TYffnwNOQkR7ooMGw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "8d0e5a24-f706-4717-a9f2-d8e9b2493468",
+                            SecurityStamp = "0a15744a-fad0-4727-b4d0-87329bcc8cfd",
                             TwoFactorEnabled = false,
                             UserName = "administrator"
                         });
@@ -256,42 +220,6 @@ namespace BlogManagement.Data.Migrations
                     b.ToTable("DBLog");
                 });
 
-            modelBuilder.Entity("BlogManagement.Domain.Entities.SysFile", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool?>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Path")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Type")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SysFile");
-                });
-
             modelBuilder.Entity("BlogManagement.Domain.Entities.UserToken", b =>
                 {
                     b.Property<long>("Id")
@@ -367,15 +295,15 @@ namespace BlogManagement.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "eea19bad-e2ee-46cd-88ef-911c49126da5",
-                            ConcurrencyStamp = "2c04726f-9386-4f7e-bfb3-50a80dcc6235",
+                            Id = "9462e7e7-7236-4e85-939d-ffa03ab4d74d",
+                            ConcurrencyStamp = "8b1090ec-139a-4fa2-b47c-3b05cdcf74f6",
                             Name = "SuperAdmin",
                             NormalizedName = "SUPERADMIN"
                         },
                         new
                         {
-                            Id = "8f81d5ac-0db4-4d2f-a5a2-25aa3a70ac9d",
-                            ConcurrencyStamp = "ae585abb-fa77-4a9b-909d-9c970db8252d",
+                            Id = "50ac45eb-001b-42a5-9897-611663bbf036",
+                            ConcurrencyStamp = "922c9d34-fbbd-46c6-80e4-cd336d0be92b",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -468,8 +396,8 @@ namespace BlogManagement.Data.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "89bb5390-5343-43f3-a713-c99b89025ac5",
-                            RoleId = "eea19bad-e2ee-46cd-88ef-911c49126da5"
+                            UserId = "3b784613-8a09-46ba-9943-756284b3e703",
+                            RoleId = "9462e7e7-7236-4e85-939d-ffa03ab4d74d"
                         });
                 });
 
@@ -490,17 +418,6 @@ namespace BlogManagement.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("BlogManagement.Domain.Entities.AboutUs", b =>
-                {
-                    b.HasOne("BlogManagement.Domain.Entities.SysFile", "SysFile")
-                        .WithMany()
-                        .HasForeignKey("SysFileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("SysFile");
                 });
 
             modelBuilder.Entity("BlogManagement.Domain.Entities.Article", b =>
