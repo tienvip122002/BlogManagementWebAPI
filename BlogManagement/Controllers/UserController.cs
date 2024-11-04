@@ -6,6 +6,10 @@ using BlogManagement.Infrastructure.CommonService;
 using BlogManagement.WebAPI.ViewModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Configuration;
+using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,6 +21,7 @@ namespace BlogManagement.WebAPI.Controllers
 	{
 		private readonly IMapper _mapper;
 		private readonly UserManager<ApplicationUser> _userManager;
+		private readonly IConfiguration _configuration;
 		private readonly PasswordHasher<ApplicationUser> _passwordHasher;
 		private readonly PasswordValidator<ApplicationUser> _passwordValidator;
 		private readonly IEmailHelper _emailHelper;
@@ -27,7 +32,8 @@ namespace BlogManagement.WebAPI.Controllers
 			PasswordHasher<ApplicationUser> passwordHasher, 
 			PasswordValidator<ApplicationUser> passwordValidator,
 			IEmailHelper emailHelper,
-			IEmailTemplateReader emailTemplateReader)
+			IEmailTemplateReader emailTemplateReader,
+			IConfiguration configuration)
 		{ 
 			_mapper = mapper;
 			_userManager = userManager;
@@ -35,6 +41,7 @@ namespace BlogManagement.WebAPI.Controllers
 			_passwordValidator = passwordValidator;
 			_emailHelper = emailHelper;
 			_emailTemplateReader = emailTemplateReader;
+			_configuration = configuration;
 		}
 
 		[HttpPost]
@@ -104,6 +111,64 @@ namespace BlogManagement.WebAPI.Controllers
 			}
 
 			return BadRequest("Confirm email failed.");
+		}
+
+		[HttpGet("forget-password")]
+		public async Task<IActionResult> ForgetPassword(CancellationToken cancellationToken, string email)
+		{
+			var user = await _userManager.FindByEmailAsync(email);
+
+			if (user is null)
+			{
+				return BadRequest("Email is not exist");
+			}
+
+			string host = _configuration.GetValue<string>("ApplicationUrl");
+
+			string tokenConfirm = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+			string encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(tokenConfirm));
+
+			string resetPasswordUrl = $"{host}reset-password?email={email}&token={encodedToken}";
+
+			string body = $"Please reset your password by clicking here: <a href=\"{resetPasswordUrl}\">link</a>";
+
+			await _emailHelper.SendEmailAsync(cancellationToken, new EmailRequest
+			{
+				To = user.Email,
+				Subject = "Reset Password",
+				Content = body
+			});
+
+			return Ok("Please check your email");
+		}
+
+		[HttpPost("reset-password")]
+		public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel resetPasswordMd)
+		{
+			var user = await _userManager.FindByEmailAsync(resetPasswordMd.Email);
+
+			if (user is null)
+			{
+				return BadRequest("Email is not exist");
+			}
+
+			if (string.IsNullOrEmpty(resetPasswordMd.Token))
+			{
+				return BadRequest("Token is invalid");
+			}
+
+			string decodedToken = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(resetPasswordMd.Token));
+
+			var identityResult = await _userManager.ResetPasswordAsync(user, decodedToken, resetPasswordMd.Password);
+
+			if (!identityResult.Succeeded)
+			{
+				return BadRequest(identityResult.Errors.ToList()[0].Description);
+			}
+
+			return Ok("Reset password successful");
+
 		}
 	}
 }

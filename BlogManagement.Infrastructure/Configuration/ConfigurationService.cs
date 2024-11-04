@@ -43,10 +43,10 @@ namespace BlogManagement.Infrastructure.Configuration
 				config.Password.RequireUppercase = true;
 			});
 
-			//service.Configure<DataProtectionTokenProviderOptions>(options =>
-			//{
-			//	options.TokenLifespan = TimeSpan.FromHours(10);
-			//});
+			service.Configure<DataProtectionTokenProviderOptions>(options =>
+			{
+				options.TokenLifespan = TimeSpan.FromHours(10);
+			});
 		}
 		public static void RegisterDI(this IServiceCollection service, IConfiguration configuration)
 		{
