@@ -1,8 +1,10 @@
 using Alachisoft.NCache.Caching.Distributed;
+using AutoMapper;
 using BlogManagement.Infrastructure.Configuration;
 using BlogManagement.WebAPI.Configuration;
 using BlogManagement.WebAPI.Middleware;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
@@ -15,8 +17,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using NLog.Extensions.Logging;
+using ProtoBuf.Extended.Meta;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -34,6 +38,8 @@ namespace BlogManagement
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			RegisterMapper(services, Configuration);
+
 			//nlog
 			services.AddLogging(logging =>
 			{
@@ -46,14 +52,15 @@ namespace BlogManagement
 			//services.AddAuthorization(options =>
 			//{
 
-			//    options.FallbackPolicy = new AuthorizationPolicyBuilder()
-			//                                    .RequireAuthenticatedUser()
-			//                                    .Build();
+			//	options.FallbackPolicy = new AuthorizationPolicyBuilder()
+			//									.RequireAuthenticatedUser()
+			//									.Build();
 
 			//});
 
 			//automapper
-			services.AddAutoMapper(typeof(AutoMapperConfig).Assembly);
+			//services.AddAutoMapper(typeof(AutoMapperConfig).Assembly);
+
 
 			//cache
 			services.AddNCacheDistributedCache(configuration =>
@@ -101,6 +108,20 @@ namespace BlogManagement
 			});
 			//fluentvalidation
 			services.AddValidatorsFromAssemblyContaining<Startup>();
+		}
+
+		private static void RegisterMapper(IServiceCollection services, IConfiguration configuration)
+		{
+			var urlServerDomain = configuration.GetSection("JwtIssuerOptions:Audience");
+			var urlServer = urlServerDomain?.Value;
+			var config = new MapperConfiguration(cfg =>
+			{
+				cfg.AddProfile(new AutoMapperConfig());
+
+
+			});
+			var mapper = config.CreateMapper();
+			services.AddSingleton(mapper);
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
