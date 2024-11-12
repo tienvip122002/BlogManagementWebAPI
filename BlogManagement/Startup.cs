@@ -121,6 +121,7 @@ namespace BlogManagement
 			var config = new MapperConfiguration(cfg =>
 			{
 				cfg.AddProfile(new AutoMapperConfig());
+				cfg.AddProfile(new SysFileMapping());
 
 
 			});

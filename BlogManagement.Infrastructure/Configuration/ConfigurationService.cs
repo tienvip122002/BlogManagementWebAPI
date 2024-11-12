@@ -20,6 +20,7 @@ using BlogManagement.core.Configuration;
 using BlogManagement.core.EmailHelper;
 using BlogManagement.Infrastructure.CommonService;
 using Microsoft.AspNetCore.Http;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 
 namespace BlogManagement.Infrastructure.Configuration
 {
@@ -55,6 +56,7 @@ namespace BlogManagement.Infrastructure.Configuration
 
 
 			service.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+			service.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 			service.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
 			service.AddScoped(typeof(IDapperHelper<>), typeof(DapperHelper<>));
 
@@ -70,6 +72,8 @@ namespace BlogManagement.Infrastructure.Configuration
 			service.AddScoped<PasswordValidator<ApplicationUser>>();
 
 			service.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+			service.AddTransient<ISysFileService, SysFileService>();
 		}
 	}
 }

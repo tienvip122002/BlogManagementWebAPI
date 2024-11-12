@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BlogManagement.Domain.Entities
 {
-	public class BaseEntitie
+	public abstract class BaseEntitie
 	{
 		public long Id { get; set; }
 		public DateTime? CreatedDate { get; set; }
