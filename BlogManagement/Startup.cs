@@ -1,5 +1,6 @@
 using Alachisoft.NCache.Caching.Distributed;
 using AutoMapper;
+using BlogManagement.Domain.Configurations;
 using BlogManagement.Infrastructure.Configuration;
 using BlogManagement.WebAPI.Configuration;
 using BlogManagement.WebAPI.Middleware;
@@ -21,6 +22,7 @@ using ProtoBuf.Extended.Meta;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -75,6 +77,8 @@ namespace BlogManagement
 			//Register Dependency Injection
 			services.RegisterDI(Configuration);
 
+			services.Configure<ConnectionStrings>(Configuration.GetSection(nameof(ConnectionStrings)));
+
 
 			services.RegisterTokenBear(Configuration);
 
@@ -127,6 +131,22 @@ namespace BlogManagement
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
+			if (string.IsNullOrWhiteSpace(env.WebRootPath))
+			{
+				env.WebRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+			}
+			if (env.IsDevelopment())
+			{
+				app.UseDeveloperExceptionPage();
+			}
+			else
+			{
+				app.UseExceptionHandler("/Error");
+				app.UseHsts();
+			}
+
+			app.UseStaticFiles();
+
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
