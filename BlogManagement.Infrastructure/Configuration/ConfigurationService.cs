@@ -21,6 +21,7 @@ using BlogManagement.core.EmailHelper;
 using BlogManagement.Infrastructure.CommonService;
 using Microsoft.AspNetCore.Http;
 using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+using BlogManagement.Domain.Constants;
 
 namespace BlogManagement.Infrastructure.Configuration
 {
@@ -74,6 +75,8 @@ namespace BlogManagement.Infrastructure.Configuration
 			service.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 			service.AddTransient<ISysFileService, SysFileService>();
+			service.AddTransient<IAboutUsService, AboutUsService>();
+
 		}
 	}
 }

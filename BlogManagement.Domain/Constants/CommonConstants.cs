@@ -8,7 +8,6 @@ namespace BlogManagement.Domain.Constants
 {
 	public static class CommonConstants
 	{
-
 		public struct Routes
 		{
 			public const string BaseRoute = "api/[controller]/[action]";

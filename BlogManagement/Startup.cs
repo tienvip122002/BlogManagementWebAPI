@@ -1,24 +1,31 @@
 using Alachisoft.NCache.Caching.Distributed;
 using AutoMapper;
 using BlogManagement.Domain.Configurations;
+using BlogManagement.Domain.Constants;
 using BlogManagement.Infrastructure.Configuration;
 using BlogManagement.WebAPI.Configuration;
 using BlogManagement.WebAPI.Middleware;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NLog.Extensions.Logging;
 using ProtoBuf.Extended.Meta;
+using Quartz.Spi;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -41,6 +48,9 @@ namespace BlogManagement
 		public void ConfigureServices(IServiceCollection services)
 		{
 			RegisterMapper(services, Configuration);
+
+			//JWT
+			//RegisterJWT(services);
 
 			//nlog
 			services.AddLogging(logging =>
@@ -109,10 +119,43 @@ namespace BlogManagement
 						new string[] { }
 					}
 				});
+				c.TagActionsBy(api =>
+				{
+					if (api.GroupName != null)
+					{
+						return new[] { api.GroupName };
+					}
+
+					var controllerActionDescriptor = api.ActionDescriptor as ControllerActionDescriptor;
+					if (controllerActionDescriptor != null)
+					{
+						return new[] { controllerActionDescriptor.ControllerName };
+					}
+
+					throw new InvalidOperationException("Unable to determine tag for endpoint.");
+				});
+				c.DocInclusionPredicate((name, api) => true);
 			});
 			//fluentvalidation
 			services.AddValidatorsFromAssemblyContaining<Startup>();
 		}
+
+		//private void RegisterJWT(IServiceCollection services)
+		//{
+		//	#region --- JWT ---
+		//	// Add framework services.
+		//	services.AddDbContext<ApplicationDbContext>(options =>
+		//		options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("OA.Infrastructure.EF")));
+
+		//	// Authorization
+		//	var httpA = new HttpContextAccessor();
+		//	services.AddAuthorization(options =>
+		//	{
+		//		options.AddPolicy(CommonConstants.Authorize.CustomAuthorization, policy => policy.Requirements.Add(new CustomAuthorization(services, httpA)));
+		//	});
+
+		//	#endregion --- JWT ---
+		//}
 
 		private static void RegisterMapper(IServiceCollection services, IConfiguration configuration)
 		{
@@ -122,6 +165,7 @@ namespace BlogManagement
 			{
 				cfg.AddProfile(new AutoMapperConfig());
 				cfg.AddProfile(new SysFileMapping());
+				cfg.AddProfile(new AboutUsMapping());
 
 
 			});
