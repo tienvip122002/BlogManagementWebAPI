@@ -22,6 +22,7 @@ namespace BlogManagement.Data
 			_configuration = configuration;
 			_serviceProvider = serviceProvider;
 		}
+		//public DbSet<ApplicationUser> ApplicationUser { get; set; } = null!;
 		public DbSet<Category> Category { get; set; }
 		public DbSet<Article> Article { get; set; }
 		public DbSet<UserToken> UserToken { get; set; }

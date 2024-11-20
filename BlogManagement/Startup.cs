@@ -166,6 +166,8 @@ namespace BlogManagement
 				cfg.AddProfile(new AutoMapperConfig());
 				cfg.AddProfile(new SysFileMapping());
 				cfg.AddProfile(new AboutUsMapping());
+				cfg.AddProfile(new ArticleMapping(urlServer));
+				cfg.AddProfile(new CategoryMapping(urlServer));
 
 
 			});

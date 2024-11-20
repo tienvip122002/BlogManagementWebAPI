@@ -4,14 +4,16 @@ using BlogManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BlogManagement.Data.Migrations
 {
     [DbContext(typeof(BlogManagementWebAPIContext))]
-    partial class BlogManagementWebAPIContextModelSnapshot : ModelSnapshot
+    [Migration("20241120094816_fix-userid")]
+    partial class fixuserid
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -132,17 +134,17 @@ namespace BlogManagement.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "b4b13c50-b4eb-4e93-8344-556d8cd036f3",
+                            Id = "81274339-6069-49be-bb9f-6ce761fa26f4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "bd4443f8-be95-4139-88ec-fbc07a05402d",
+                            ConcurrencyStamp = "b1d91e83-1537-44b0-969b-c9e59944804d",
                             Email = "admin@ymail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@YMAIL.COM",
                             NormalizedUserName = "ADMINISTRATOR",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPQRHgel+HzeUoqXAf4b1n5nliHdx9VKLwuvSsz61bVYy8ZKfWKhizfSNze6rPUsUA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEF3vLnF4Zm6gZULcfQ1Dntnzy/8KWutQ0cLOz3CcQFvrP1kFOhJJid0u4XDEoQIMPA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "6fefaa17-3b16-4944-8e8f-bf6749f3b542",
+                            SecurityStamp = "0ef13885-ccd2-4ec7-b09a-c45873bc71b6",
                             TwoFactorEnabled = false,
                             UserName = "administrator"
                         });
@@ -395,15 +397,15 @@ namespace BlogManagement.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "cd917c93-3c4d-4614-bf38-fc1413190f74",
-                            ConcurrencyStamp = "a493c4f8-d963-4cbe-a25d-14aba47fbba6",
+                            Id = "407d4e8f-e3c8-4fad-8507-b8f19d8b0632",
+                            ConcurrencyStamp = "8e4fe81b-409e-439e-9aa6-cac6de934e12",
                             Name = "SuperAdmin",
                             NormalizedName = "SUPERADMIN"
                         },
                         new
                         {
-                            Id = "6cd1c12b-cfd6-480a-aa71-9b379f2c042a",
-                            ConcurrencyStamp = "e60a43ba-fe7b-4001-8f7d-445a3c70650b",
+                            Id = "88743d0f-120e-41ed-837d-ac2444e1ec18",
+                            ConcurrencyStamp = "97d3a507-302b-4ff0-8143-95ed9b9413a1",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -496,8 +498,8 @@ namespace BlogManagement.Data.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "b4b13c50-b4eb-4e93-8344-556d8cd036f3",
-                            RoleId = "cd917c93-3c4d-4614-bf38-fc1413190f74"
+                            UserId = "81274339-6069-49be-bb9f-6ce761fa26f4",
+                            RoleId = "407d4e8f-e3c8-4fad-8507-b8f19d8b0632"
                         });
                 });
 

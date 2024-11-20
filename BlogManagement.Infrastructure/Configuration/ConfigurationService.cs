@@ -76,6 +76,7 @@ namespace BlogManagement.Infrastructure.Configuration
 
 			service.AddTransient<ISysFileService, SysFileService>();
 			service.AddTransient<IAboutUsService, AboutUsService>();
+			service.AddTransient<IArticleService, ArticleService>();
 
 		}
 	}

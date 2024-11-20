@@ -13,9 +13,17 @@ namespace BlogManagement.Domain.Entities
 		public string? Alias { get; set; }
 		public string? ShortDescription { get; set; }
 		public string? Description { get; set; }
+		public long? ThumbnailFileId { get; set; }
+		public bool? IsHighlight { get; set; }
 		public long CountView { get; set; }
+		public string? UserId { get; set; } = null!;
 		public long? CategoryId { get; set; }
-		[ForeignKey("CategoryId")]
-		public Category Category { get; set; }
+		public long? AttachmentFileId { get; set; }
+
+		public virtual SysFile? AttachmentFile { get; set; }
+		public virtual Category? Category { get; set; }
+		public virtual SysFile? ThumbnailFile { get; set; }
+		[ForeignKey("UserId")]
+		public virtual ApplicationUser User { get; set; }
 	}
 }
