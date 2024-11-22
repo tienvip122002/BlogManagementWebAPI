@@ -16,13 +16,14 @@ namespace BlogManagement.WebAPI.Controllers
 	public class ArticleController : BaseController<ArticleController, Article, ArticleCreateVModel, ArticleUpdateVModel, ArticleGetByIdVModel, ArticleGetAllVModel>
 	{
 		private readonly IArticleService _articleService;
-		//private readonly ILogger _logger;
+		private readonly ILogger _logger;
 		private readonly string GlobalUserId;
 		private readonly IHttpContextAccessor _contextAccessor;
 
-		public ArticleController(IArticleService cmsArticleService, IHttpContextAccessor contextAccessor)
-			: base(cmsArticleService)
+		public ArticleController(IArticleService cmsArticleService, IHttpContextAccessor contextAccessor, ILogger<ArticleController> logger)
+			: base(cmsArticleService, logger)
 		{
+            _logger = logger;
 			_articleService = cmsArticleService;
 			_contextAccessor = contextAccessor;
 			GlobalUserId = _contextAccessor.HttpContext.User.Identity.IsAuthenticated ? _contextAccessor.HttpContext.User.FindFirst(CommonConstants.SpecialFields.id)?.Value : string.Empty;

@@ -13,12 +13,14 @@ namespace BlogManagement.WebAPI.Controllers
 	[Route(CommonConstants.Routes.BaseRouteAdmin)]
 	public class AboutUsController : BaseController<AboutUsController, AboutUs, AboutUsCreateVModel, AboutUsUpdateVModel, AboutUsGetByIdVModel, AboutUsGetAllVModel>
 	{
+        private readonly ILogger<AboutUsController> _logger;
 		private readonly IAboutUsService _AboutUsService;
 
-		public AboutUsController(IAboutUsService AboutUsService)
-			: base(AboutUsService)
+		public AboutUsController(IAboutUsService AboutUsService, ILogger<AboutUsController> logger)
+			: base(AboutUsService, logger)
 		{
 			_AboutUsService = AboutUsService;
+			_logger = logger;
 		}
 
 		[HttpGet]
@@ -31,7 +33,7 @@ namespace BlogManagement.WebAPI.Controllers
 				var result = new ObjectResult(response);
 				if (!response.Success)
 				{
-					//log
+					_logger.LogWarning(CommonConstants.LoggingEvents.GetItem, MsgConstants.ErrorMessages.ErrorGetById, _nameController);
 				}
 				return result;
 			}
@@ -42,7 +44,7 @@ namespace BlogManagement.WebAPI.Controllers
 				var result = new ObjectResult(response);
 				if (!response.Success)
 				{
-					//log
+					_logger.LogWarning(CommonConstants.LoggingEvents.GetItem, MsgConstants.ErrorMessages.ErrorGetById, _nameController);
 				}
 				return result;
 			}

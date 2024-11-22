@@ -13,11 +13,12 @@ namespace BlogManagement.WebAPI.Controllers
 		where TEntity : BaseEntitie
 	{
 		private readonly IBaseService<TEntity, TCreateVModel, TUpdateVModel, TGetByIdVModel, TGetAllVModel> _service;
-		//private readonly ILogger _logger;
+		private readonly ILogger _logger;
 		protected static string _nameController;
 
-		protected BaseController(IBaseService<TEntity, TCreateVModel, TUpdateVModel, TGetByIdVModel, TGetAllVModel> service)
+		protected BaseController(IBaseService<TEntity, TCreateVModel, TUpdateVModel, TGetByIdVModel, TGetAllVModel> service, ILogger<TController> logger)
 		{
+            _logger = logger;
 			_service = service;
 			_nameController = GetControllerName(typeof(TController).Name);
 		}
@@ -42,7 +43,7 @@ namespace BlogManagement.WebAPI.Controllers
 			var result = new ObjectResult(response);
 			if (!response.Success)
 			{
-				//_logger.LogWarning(CommonConstants.LoggingEvents.GetItem, MsgConstants.ErrorMessages.ErrorGetById, _nameController);
+				_logger.LogWarning(CommonConstants.LoggingEvents.GetItem, MsgConstants.ErrorMessages.ErrorGetById, _nameController);
 			}
 			return result;
 		}
@@ -60,7 +61,7 @@ namespace BlogManagement.WebAPI.Controllers
 				result = new ObjectResult(response);
 				if (!response.Success)
 				{
-					//_logger.LogWarning(CommonConstants.LoggingEvents.CreateItem, MsgConstants.ErrorMessages.ErrorCreate, _nameController);
+					_logger.LogWarning(CommonConstants.LoggingEvents.CreateItem, MsgConstants.ErrorMessages.ErrorCreate, _nameController);
 				}
 			}
 			return result;
@@ -79,7 +80,7 @@ namespace BlogManagement.WebAPI.Controllers
 				result = new ObjectResult(response);
 				if (!response.Success)
 				{
-					//_logger.LogWarning(CommonConstants.LoggingEvents.UpdateItem, MsgConstants.ErrorMessages.ErrorUpdate, _nameController);
+					_logger.LogWarning(CommonConstants.LoggingEvents.UpdateItem, MsgConstants.ErrorMessages.ErrorUpdate, _nameController);
 				}
 			}
 			return result;
@@ -96,7 +97,7 @@ namespace BlogManagement.WebAPI.Controllers
 			result = new ObjectResult(response);
 			if (!response.Success)
 			{
-				//_logger.LogWarning(CommonConstants.LoggingEvents.UpdateItem, MsgConstants.ErrorMessages.ErrorChangeStatus, _nameController);
+				_logger.LogWarning(CommonConstants.LoggingEvents.UpdateItem, MsgConstants.ErrorMessages.ErrorChangeStatus, _nameController);
 			}
 			return result;
 		}

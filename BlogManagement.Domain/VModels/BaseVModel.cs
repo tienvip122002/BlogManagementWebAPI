@@ -10,7 +10,6 @@ namespace BlogManagement.Domain.VModels
 	public class FiltersGetAllVModel
 	{
 		public bool? IsActive { get; set; }
-		public long? LanguageId { get; set; }
 		public DateTime? CreatedDate { get; set; }
 		public string CreatedBy { get; set; }
 		public DateTime? UpdatedDate { get; set; }
@@ -25,7 +24,6 @@ namespace BlogManagement.Domain.VModels
 	public class FiltersGetAllByQueryStringVModel
 	{
 		public string Keyword { get; set; }
-		public string LanguageId { get; set; }
 		public string CategoryId { get; set; }
 		public string CreatedDate { get; set; }
 		public bool? IsActive { get; set; }

@@ -3,45 +3,53 @@ using System.Threading.Tasks;
 using System.Threading;
 using BlogManagement.Service.Abstract;
 using Microsoft.AspNetCore.Authorization;
-using NLog;
+//using NLog;
 using BlogManagement.core.Abstract;
+using BlogManagement.Domain.Constants;
+using BlogManagement.Domain.Model;
+using BlogManagement.Domain.VModels;
+using Microsoft.Extensions.Logging;
+using BlogManagement.Domain.Entities;
 
 namespace BlogManagement.WebAPI.Controllers
 {
-	[ApiController]
-	[Route("api/[controller]")]
-	public class CategoryController: ControllerBase
+	[ApiExplorerSettings(GroupName = CommonConstants.Routes.GroupAdmin)]
+	[Route(CommonConstants.Routes.BaseRouteAdmin)]
+	public class CategoryController : BaseController<CategoryController, Category, CategoryCreateVModel, CategoryUpdateVModel, CategoryGetByIdVModel, CategoryGetAllVModel>
 	{
-		ICategoryService _categoryService;
-		IEmailHelper _emailHelper;
-		//private readonly ILogger _loggerDb = LogManager.GetLogger("logDatabaseTarget");
-		public CategoryController(ICategoryService categoryService, IEmailHelper emailHelper)
+		private readonly ICategoryService _categoryService;
+		private readonly ILogger _logger;
+		public CategoryController(ICategoryService categoryService, ILogger<CategoryController> logger) : base(categoryService, logger)
 		{
 			_categoryService = categoryService;
-			_emailHelper = emailHelper;
+			_logger = logger;
 		}
 
-
-		/// <summary>
-		/// Get all categories
-		/// </summary>
-		/// <returns></returns>
-		/// <exception cref="System.ArgumentNullException"></exception>
 		[HttpGet]
-		[Produces("text/json")]
-		public async Task<IActionResult> GetAllCategory(CancellationToken cancellationToken)
+		public virtual async Task<IActionResult> GetAllAsTree(FiltersGetAllVModel model)
 		{
-			//throw new System.ArgumentNullException();
-			var result = await _categoryService.GetCategoryAll();
+			var result = await _categoryService.GetAllAsTree(model);
+			return new ObjectResult(result);
+		}
 
-			await _emailHelper.SendEmailAsync(cancellationToken, new Domain.Model.EmailRequest
+		[HttpGet]
+		public virtual async Task<IActionResult> Search(FiltersGetAllVModel model, string keyword)
+		{
+			var response = new ResponseResult();
+			if (!string.IsNullOrEmpty(keyword))
 			{
-				To = "tientiengviet@gmail.com",
-				Subject = "This is test for sending mail from NetCore",
-				Content = "No Content!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-			});
-
-			return Ok(result);
+				response = await _categoryService.Search(model, keyword);
+			}
+			else
+			{
+				response = await _categoryService.GetAll(model);
+			}
+			var result = new ObjectResult(response);
+			if (!response.Success)
+			{
+				_logger.LogWarning(CommonConstants.LoggingEvents.GetItem, MsgConstants.ErrorMessages.ErrorGetById, _nameController);
+			}
+			return result;
 		}
 	}
 }
